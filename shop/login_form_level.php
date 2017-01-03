@@ -39,8 +39,8 @@ if (isset($_POST['username']) && isset($_POST['password']))
 			// 建立session變數
     		$_SESSION['Username'] = $username;
 		    $_SESSION['UserGroup'] = mysql_result($result, 0, 'userlevel');
-			// 成功登入, 前往 main.php
-    		header("Location: main.php");
+			// 成功登入, 前往 main_level.php
+    		header("Location: main_level.php");
 	  	}
   		else 
 		{

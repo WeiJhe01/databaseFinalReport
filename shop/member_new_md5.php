@@ -8,35 +8,27 @@ if (!isset($_SESSION)) {
 }
 ?>
 <?php
-//-----------------------------------------
+//**********************************//
 // 在member資料表內插入一筆新的紀錄
-//-----------------------------------------
-
+//**********************************//
 if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new")) 
 {
 	// 選擇 MySQL 資料庫ch26
 	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');	
 	  
 	// 在member資料表內插入一筆新的紀錄
-	$query = sprintf("INSERT INTO member (username, password, name, sex, birthday, email, phone, address, uniform, unititle, userlevel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-		GetSQLValue($_POST['username'], "text"), 
-		GetSQLValue($_POST['password'], "text"), 
-		GetSQLValue($_POST['name'], "text"), 
-		GetSQLValue($_POST['sex'], "text"), 
-		GetSQLValue($_POST['birthday'], "date"), 
-		GetSQLValue($_POST['email'], "text"), 
-		GetSQLValue($_POST['phone'], "text"), 
-		GetSQLValue($_POST['address'], "text"), 
-		GetSQLValue($_POST['uniform'], "text"), 
-		GetSQLValue($_POST['unititle'], "text"),
-		GetSQLValue($_POST['userlevel'], "int"));
+	$query = sprintf("INSERT INTO member_md5 (username, password, name, sex, birthday, email, phone, address, uniform, unititle, userlevel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", GetSQLValue(md5($_POST['username']), "text"), 
+	GetSQLValue(md5($_POST['password']), "text"), GetSQLValue($_POST['name'], "text"), GetSQLValue($_POST['sex'], "text"), 
+	GetSQLValue($_POST['birthday'], "date"), GetSQLValue($_POST['email'], "text"), GetSQLValue($_POST['phone'], "text"), 
+	GetSQLValue($_POST['address'], "text"), GetSQLValue($_POST['uniform'], "text"), GetSQLValue($_POST['unititle'], "text"),
+	GetSQLValue($_POST['userlevel'], "int"));
 	
 	// 傳回結果集
-	$result = mysql_query($query, $connection);
+    $result = mysql_query($query, $connection);
 
 	if ($result) {
-		// 回到前一個網頁 
-		header(sprintf("Location: %s", $_SESSION['PrevPage']));
+	    // 回到前一個網頁 
+	  	header(sprintf("Location: %s", $_SESSION['PrevPage']));
 	}
 }
 ?>
@@ -86,7 +78,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="username" id="username" type="text" class="member_new_style13" size="20" maxlength="10" 
-                     value="" />
+                     value="<?php echo $_COOKIE['username']; ?>" />
                      <span class="member_new_style8">＊</span>（3~10個字元，請勿使用中文）                 
                  </td>
                </tr>
@@ -98,7 +90,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                 <td class="member_new_style12">
                    <input name="password" id="password" type="password" class="member_new_style13" size="20" maxlength="12" 
-                     value="" />
+                     value="<?php echo $_COOKIE['password']; ?>" />
                      <span class="member_new_style8">＊</span>（6~12個字元，請勿使用中文）
                  </td>
                </tr>
@@ -110,7 +102,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="name" id="name" type="text" class="member_new_style13" size="20" maxlength="40" 
-                     value="" />
+                     value="<?php echo uniDecode($_COOKIE['name']); ?>" />
                      <span class="member_new_style8">＊</span>
                  </td>
                </tr>
@@ -159,7 +151,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="email" id="email" type="text" class="member_new_style13" size="40" maxlength="40" 
-                     value="" />
+                     value="<?php echo $_COOKIE['email']; ?>" />
                      <span class="member_new_style8">＊</span>
                  </td>
                </tr>
@@ -171,7 +163,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="year" id="year" type="text" class="member_new_style13" size="6" maxlength="4" 
-                     value="" />
+                     value="<?php echo $_COOKIE['year']; ?>" />
                      &nbsp;年&nbsp;
                    <!-- 在選單中填入[出生日期]的[月]欄位值 -->
 	               <select name="month" id="month">
@@ -230,7 +222,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="phone" id="phone" type="text" class="member_new_style13" size="20" maxlength="15" 
-                     value="" />
+                     value="<?php echo uniDecode($_COOKIE['phone']); ?>" />
                      <span class="member_new_style8">＊</span>  
                  </td>
                </tr>
@@ -242,7 +234,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="address" id="address" type="text" class="member_new_style13" size="60" maxlength="120"
-                     value="" />
+                     value="<?php echo uniDecode($_COOKIE['address']); ?>" />
                      <span class="member_new_style8">＊</span> 
                  </td>
                </tr>
@@ -254,7 +246,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="uniform" id="uniform" type="text" class="member_new_style13" size="40" maxlength="20"
-                     value="" />
+                     value="<?php echo uniDecode($_COOKIE['uniform']); ?>" />
                  </td>
                </tr>
 		       <tr>
@@ -265,7 +257,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="unititle" id="unititle" type="text" class="member_new_style13" size="40" maxlength="40"
-                     value="" />
+                     value="<?php echo uniDecode($_COOKIE['unititle']); ?>" />
                  </td>
                </tr>
              </table>

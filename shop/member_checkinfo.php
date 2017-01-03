@@ -22,7 +22,7 @@ if (isset($_SESSION['Username'])) {
 // 選擇 MySQL 資料庫ch26
 mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');
 // 查詢目前帳號的紀錄
-$query = sprintf("SELECT * FROM member WHERE username = %s", GetSQLValue($username, "text"));
+$query = sprintf("SELECT book.id,member.name FROM member WHERE book.username = %s & member.username=%s", GetSQLValue($username, "text"), GetSQLValue($username, "text"));
 
 // 傳回結果集
 $result = mysql_query($query, $connection);
@@ -62,6 +62,18 @@ if ((isset($_POST["update"])) && ($_POST["update"] == "member_info"))
 }
 ?>
 <?php 
+/* 如欲顯示密碼
+<tr>
+    <td class="member_info_style10">
+        <span class="member_info_style11">
+         密　　碼
+        </span>
+    </td>
+    <td class="member_info_style12">
+        <?php echo $row['password']; ?>
+    </td>
+</tr>
+*/
 // 取得這筆紀錄的 birthday 欄位值
 $date = getdate(strtotime($row['birthday']));
 // 設定 [年],[月],[日] 欄位
@@ -96,11 +108,7 @@ $day = $date['mday'];
               <span class="member_info_style6">注意事項</span>
               <br /><br />
               <span class="member_info_style7">
-                1. 在修改之前，請先確認您要修改的資料。
-              </span>
-              <br />
-              <span class="member_info_style7">
-                2. 修改資料之後，就無法再還原。
+                如果資料有誤，請點選下方按鈕"回到上一頁"，再重新點入"修改基本資料 》"進行修改。
               </span>
             </td>
           </tr>
@@ -109,24 +117,10 @@ $day = $date['mday'];
         	  <table class="member_info_style9">
                <tr>
                  <td class="member_info_style10">
-                   <span class="member_info_style11">帳　　號</span>                 
+                   <span class="member_info_style11">帳　　號</span>     		   
                  </td>
                  <td class="member_info_style12">
-                   <input name="username" id="username" type="text" class="member_info_style13" size="20" maxlength="10" 
-                     value="<?php echo $row['username']; ?>" />
-                     <span class="member_info_style8">＊</span>（3~10個字元，請勿使用中文）                 
-                 </td>
-               </tr>
-               <tr>
-                 <td class="member_info_style10">
-                   <span class="member_info_style11">
-                     密　　碼
-                   </span>
-                 </td>
-                <td class="member_info_style12">
-                   <input name="password" id="password" type="password" class="member_info_style13" size="20" maxlength="12" 
-                     value="<?php echo $row['password']; ?>" />
-                     <span class="member_info_style8">＊</span>（6~12個字元，請勿使用中文）
+                   <?php echo $row['username']; ?> 				   
                  </td>
                </tr>
                <tr>
@@ -136,9 +130,7 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="name" id="name" type="text" class="member_info_style13" size="20" maxlength="40" 
-                     value="<?php echo $row['name']; ?>" />
-                     <span class="member_info_style8">＊</span>
+                   <?php echo $row['name']; ?>
                  </td>
                </tr>
                <tr>
@@ -148,14 +140,10 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="sex" type="radio" value="男" class="member_info_style14"  
-                     <?php if (!(strcmp($row['sex'],'男'))) 
-		               {echo "checked=\"checked\"";} ?> />
-                     男
-		           <input name="sex" type="radio" value="女" 
-		             <?php if (!(strcmp($row['sex'],'女'))) 
-		              {echo "checked=\"checked\"";} ?> />
-  	                 女  
+                   <?php if (!(strcmp($row['sex'],'男'))) 
+		               {echo "男";} ?>
+		           <?php if (!(strcmp($row['sex'],'女'))) 
+		              {echo "女";} ?>
                  </td>
                </tr>
                <tr>
@@ -165,9 +153,7 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="email" id="email" type="text" class="member_info_style13" size="40" maxlength="40" 
-                     value="<?php echo $row['email']; ?>" />
-                     <span class="member_info_style8">＊</span>
+                   <?php echo $row['email']; ?>
                  </td>
                </tr>
                <tr>
@@ -177,39 +163,12 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="year" id="year" type="text" class="member_info_style13" size="6" maxlength="4" 
-                     value="<?php echo $year; ?>" />
+                   <?php echo $year; ?>
                      &nbsp;年&nbsp;
-                   <!-- 在選單中填入[出生日期]的[月]欄位值 -->
-	               <select name="month" id="month">
-        		   <?php
-		  			 for ($i = 1; $i <= 12; $i++)
-		  			 {
-				   ?>
-            	     <option value="<?php echo $i ?>"
-              	       <?php if ($i==$month){echo "selected=\"selected\"";} ?>>
-                       &nbsp;&nbsp;<?php echo $i ?>&nbsp;
-                     </option>         
-				   <?php
-                     }
-                   ?>
-                   </select>
-                   &nbsp;月&nbsp;&nbsp;
-                   <select name="day" id="day">
-                   <?php
-                     for ($i = 1; $i <= 31; $i++)
-                     {
-                   ?>
-                       <option value="<?php echo $i ?>" 
-                         <?php if ($i==$day){echo "selected=\"selected\"";} ?>>
-                         &nbsp;&nbsp;<?php echo $i ?>&nbsp;&nbsp;
-                       </option>         
-                   <?php
-                     }
-                   ?>
-                   </select>
-                   &nbsp;日&nbsp;&nbsp;
-                   <span class="member_info_style8">＊</span>（請填入西元年, 例如 2010）
+					 <?php echo $month; ?>
+                     &nbsp;月&nbsp;
+					 <?php echo $day; ?>
+                     &nbsp;日&nbsp;
                  </td>
                </tr>
                <tr>
@@ -219,9 +178,7 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="phone" id="phone" type="text" class="member_info_style13" size="20" maxlength="15" 
-                     value="<?php echo $row['phone']; ?>" />
-                     <span class="member_info_style8">＊</span>  
+                   <?php echo $row['phone']; ?>  
                  </td>
                </tr>
                <tr>
@@ -231,9 +188,7 @@ $day = $date['mday'];
                    </span> 
                  </td>
                  <td class="member_info_style12">
-                   <input name="address" id="address" type="text" class="member_info_style13" size="60" maxlength="120"
-                     value="<?php echo $row['address']; ?>" />
-                     <span class="member_info_style8">＊</span> 
+                   <?php echo $row['address']; ?>
                  </td>
                </tr>
 		       <tr>
@@ -242,9 +197,7 @@ $day = $date['mday'];
                      統一編號
                    </span> 
                  </td>
-                 <td class="member_info_style12">
-                   <input name="uniform" id="uniform" type="text" class="member_info_style13" size="40" maxlength="20"
-                     value="<?php echo $row['uniform']; ?>" />
+                 <?php echo $row['uniform']; ?>
                  </td>
                </tr>
 		       <tr>
@@ -254,8 +207,108 @@ $day = $date['mday'];
                    </span>
                  </td>
                  <td class="member_info_style12">
-                   <input name="unititle" id="unititle" type="text" class="member_info_style13" size="40" maxlength="40"
-                     value="<?php echo $row['unititle']; ?>" />
+                   <?php echo $row['unititle']; ?>
+                 </td>
+               </tr>
+             </table>
+           </td>
+         </tr>
+		 <tr>
+            <td class="member_info_style16">
+        	  <table class="member_info_style9">
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">帳　　號</span>     		   
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['username']; ?> 				   
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     姓　　名
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['name']; ?>
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     性　　別
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php if (!(strcmp($row['sex'],'男'))) 
+		               {echo "男";} ?>
+		           <?php if (!(strcmp($row['sex'],'女'))) 
+		              {echo "女";} ?>
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     電子信箱
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['email']; ?>
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     出生日期
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $year; ?>
+                     &nbsp;年&nbsp;
+					 <?php echo $month; ?>
+                     &nbsp;月&nbsp;
+					 <?php echo $day; ?>
+                     &nbsp;日&nbsp;
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     連絡電話 
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['phone']; ?>  
+                 </td>
+               </tr>
+               <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     收件地址  
+                   </span> 
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['address']; ?>
+                 </td>
+               </tr>
+		       <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     統一編號
+                   </span> 
+                 </td>
+                 <?php echo $row['uniform']; ?>
+                 </td>
+               </tr>
+		       <tr>
+                 <td class="member_info_style10">
+                   <span class="member_info_style11">
+                     發票抬頭
+                   </span>
+                 </td>
+                 <td class="member_info_style12">
+                   <?php echo $row['unititle']; ?>
                  </td>
                </tr>
              </table>
@@ -266,8 +319,7 @@ $day = $date['mday'];
              <table class="member_info_style9">
                <tr>
                  <td class="member_info_style2">
-                   <input type="submit" value="確定送出" onclick="return CheckFields();" />
-                   <input type="button" value="取消" class="member_info_style15" 
+                   <input type="button" value="回到上一頁" class="member_info_style15" 
                    	 onclick="document.location='<?php echo $_SESSION['PrevPage']; ?>'; return false;" />
                  </td>
                </tr>

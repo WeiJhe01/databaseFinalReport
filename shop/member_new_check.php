@@ -1,8 +1,8 @@
 <?php require_once('Connections/connection.php'); ?>
 <?php require_once('Connections/function.php'); ?>
 <?php
-// 選擇 MySQL 資料庫ch30
-mysql_select_db('ch30', $connection) or die('資料庫ch30不存在'); 
+// 選擇 MySQL 資料庫ch26
+mysql_select_db('ch26', $connection) or die('資料庫ch26不存在'); 
 
 // 新會員輸入的帳號
 $check_name = "-1";

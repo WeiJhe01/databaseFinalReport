@@ -1,6 +1,6 @@
 <?php
 // 建立 MySQL 資料庫的連線
-$connection = mysql_connect('localhost', 'ben', 'ben010697') or 
+$connection = mysql_connect('localhost', 'csie405', 'csie405') or 
 	trigger_error(mysql_error(), E_USER_ERROR);
 // 設定在用戶端使用UTF-8的字元集
 mysql_set_charset('utf8', $connection);

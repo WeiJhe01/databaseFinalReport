@@ -1,5 +1,4 @@
 <?php
-// 矪瞶SQL琩高Α﹃
 function GetSQLValue($value, $type) 
 {
   	switch ($type) 
@@ -21,12 +20,10 @@ function GetSQLValue($value, $type)
   	return $value;
 }
 
-// 盢JavaScriptescapeㄧ计┮肚筁ㄓURL把计, 锣传Θ UTF-8
 function uniDecode($str)
 {
- 	return preg_replace_callback("/%u[0-9A-Za-z]{4}/", toUtf8, $str);
+ 	return preg_replace_callback("/%u[0-9A-Za-z]{4}/", "toUtf8", $str);
 }
-// 盢JavaScriptescapeㄧ计┮肚筁ㄓURL把计, 锣传Θ UTF-8
 function toUtf8($ar)
 {
 	foreach( $ar as $val)
@@ -44,8 +41,8 @@ function toUtf8($ar)
 	        $c .= chr(0xC0 | ($val / 64));
     	    $c .= chr(0x80 | ($val % 64));
 	    }
-		else
-		{   
+		else 
+		{   $c=NULL;
 		    // 0800-FFFF
         	$c .= chr(0xE0 | (($val / 64) / 64));
 	        $c .= chr(0x80 | (($val / 64) % 64));

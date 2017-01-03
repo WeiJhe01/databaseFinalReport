@@ -6,15 +6,15 @@ if (!isset($_SESSION)) {
   session_start();
 }
 // 前一個網頁
-$_SESSION['PrevPage'] = "index.php";
+$_SESSION['PrevPage'] = "index_md5.php";
 ?>
 <?php
 //*******************************//
 // 登出
 //*******************************//
-// index.php?logout=true
+// index_md5.php?logout=true
 $logout = $_SERVER['PHP_SELF'] . "?logout=true";
-// index.php網址後面有logout參數
+// index_md5.php網址後面有logout參數
 if ((isset($_GET['logout'])) &&($_GET['logout']=="true"))
 {
   	// 刪除session變數
@@ -24,28 +24,29 @@ if ((isset($_GET['logout'])) &&($_GET['logout']=="true"))
   	unset($_SESSION['Username']);
     unset($_SESSION['UserGroup']);
     unset($_SESSION['PrevUrl']);
-	// 重新執行index.php
-  	header("Location: index.php");
+	// 重新執行index_md5.php
+  	header("Location: index_md5.php");
 }
 ?>
 <?php
 //*******************************//
 // 登入
 //*******************************//
-// login_form.php的標題
+// login_form_md5.php的標題
 $_SESSION['login_form_title'] = "請先登入";
 
 // 有帳號與密碼欄位
 if (isset($_POST['username']) && isset($_POST['password'])) 
 {
     // 帳號與密碼欄位
-	$username = $_POST['username'];
-  	$password = $_POST['password'];
+	$username = md5($_POST['username']);
+  	$password = md5($_POST['password']);
+	
 	// 選擇 MySQL 資料庫ch26
 	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在'); 
 	 
   	// 查詢member資料表的username與password欄位
-  	$query = sprintf("SELECT username, password, userlevel FROM member WHERE username=%s AND password=%s",
+  	$query = sprintf("SELECT username, password, userlevel FROM member_md5 WHERE username=%s AND password=%s",
         GetSQLValue($username, "text"), GetSQLValue($password, "text")); 
    	// 傳回結果集
     $result = mysql_query($query, $connection) or die(mysql_error());
@@ -60,19 +61,19 @@ if (isset($_POST['username']) && isset($_POST['password']))
 			// 建立session變數
     		$_SESSION['Username'] = $username;
 		    $_SESSION['UserGroup'] = mysql_result($result, 0, 'userlevel');
-			// 成功登入, 前往 main.php
-    		header("Location: main.php");
+			// 成功登入, 前往 main_md5.php
+    		header("Location: main_md5.php");
 	  	}
   		else 
 		{
-		    // 重新登入, 前往login_form.php 
-    		header("Location: login_form.php");
+		    // 重新登入, 前往login_form_md5.php 
+    		header("Location: login_form_md5.php");
   		}
 	}
 	else
 	{		
-		// 無效的帳號或密碼, 重新登入, 前往login_form.php 
-    	header("Location: login_form.php");
+		// 無效的帳號或密碼, 重新登入, 前往login_form_md5.php 
+    	header("Location: login_form_md5.php");
 	}
 }
 ?>
@@ -97,7 +98,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
 	  <table class="index_style4">
         <tr>
           <td class="index_style5">
-	          <span class="index_style6">【會員中心】</span>
+	        <span class="index_style6">【會員中心】</span>
             <br /><br />
             <span class="index_style7">在「會員中心」裡，您可以查看，修改，管理與您相關的各項資料。</span>
             <br />
@@ -111,26 +112,13 @@ if (isset($_POST['username']) && isset($_POST['password']))
 	  	      <li>定期收到最新的購物資訊及好康特惠訊息。</li>
               </ol>
             </span>
-		  <?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-		  ?>
             <span class="index_style7">如果您尚未加入會員，歡迎加入我們的會員。</span>
-            <br /><br /><br /><br />
-            <a href="member_new.php" class="index_style8">加入會員 》</a>
-		  <?php
-			}
-		  ?>
+		    <br /><br /><br /><br />
+			<a href="member_new_md5.php" class="index_style8">加入會員 》</a>
           </td>
           <td class="index_style9">
-            <!-- 執行 index.php -->
-			<?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-          ?>
-	          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <!-- 執行 index_md5.php -->
+	        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
               <table class="index_style10">
                 <tr>
                   <td class="index_style11">
@@ -150,43 +138,28 @@ if (isset($_POST['username']) && isset($_POST['password']))
                 </tr>
                 <tr>
                   <td class="index_style14">
-                    <input type="submit" value="登入" class="index_style16" />
+				    <input type="submit" value="登入" class="index_style16" />
                   </td>
-                </tr>
-                </table>
-              </form>
+				</tr>
+			  </table>
+			</form>
             <hr class="index_style17" />
-					<?php
-			}
-		  ?>
-					<?php
-            // 已經登入
-            if (isset($_SESSION['Username'])) 
-            {
-          ?>
-		      <a href="main.php" class="index_style18">回到首頁 》</a>
-			    <hr class="index_style17" />
-		      <a href="member_checkinfo.php" class="index_style18">查看基本資料 》</a>
-			    <hr class="index_style17" />
-              <a href="member_info.php" class="index_style18">修改基本資料 》</a>
+			<?php
+			  // 已經登入
+              if (isset($_SESSION['Username'])) 
+			  {
+			?>
+                <a href="member_info.php" class="index_style18">基本資料 》</a>
             	<hr class="index_style17" />
             	<a href="<?php echo $logout ?>" class="index_style18">登出 》</a>
             	<hr class="index_style17" />
-					<?php
-            }
-          ?>
             <?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-          ?>
-			<a href="exec_help.php" class="index_style18">忘記密碼 》</a>
-            <hr class="index_style17" /> 
-			<?php
-			}
-		  ?>
+              }
+			?>
+            <a href="exec_help.php" class="index_style18">忘記密碼 》</a>
+			<hr class="index_style17" /> 
           </td>
-        </tr>
+		</tr>
       </table>    
     </td>
   </tr>

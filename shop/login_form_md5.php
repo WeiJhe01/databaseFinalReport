@@ -6,7 +6,7 @@ if (!isset($_SESSION)) {
   session_start();
 }
 // 前一個網頁
-$_SESSION['PrevPage'] = "login_form.php";
+$_SESSION['PrevPage'] = "login_form_md5.php";
 ?>
 <?php
 //*******************************//
@@ -17,15 +17,16 @@ $_SESSION['PrevPage'] = "login_form.php";
 if (isset($_POST['username']) && isset($_POST['password'])) 
 {
     // 帳號與密碼欄位
-	$username = $_POST['username'];
-  	$password = $_POST['password'];	
+	$username = md5($_POST['username']);
+  	$password = md5($_POST['password']);
+	
 	// 選擇 MySQL 資料庫ch26
-	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');	  
+	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');
 	
   	// 查詢member資料表的username與password欄位
-  	$query = sprintf("SELECT username, password, userlevel FROM member WHERE username=%s AND password=%s",
-        GetSQLValue($username, "text"), GetSQLValue($password, "text")); 		
-   	// 傳回結果集
+  	$query = sprintf("SELECT username, password, userlevel FROM member_md5 WHERE username=%s AND password=%s",
+        GetSQLValue($username, "text"), GetSQLValue($password, "text"));	
+	// 傳回結果集
     $result = mysql_query($query, $connection);	
 	
 	if ($result)
@@ -39,23 +40,23 @@ if (isset($_POST['username']) && isset($_POST['password']))
 			// 建立session變數
     		$_SESSION['Username'] = $username;
 		    $_SESSION['UserGroup'] = mysql_result($result, 0, 'userlevel');
-			// 成功登入, 前往 main.php
-    		header("Location: main.php");
+			// 成功登入, 前往 main_md5.php
+    		header("Location: main_md5.php");
 	  	}
   		else 
 		{
-		    // login_form.php的標題
+		    // login_form_md5.php的標題
 			$_SESSION['login_form_title'] = "無效的帳號或密碼";
-		    // 重新登入, 前往login_form.php 
-    		header("Location: login_form.php");
+		    // 重新登入, 前往login_form_md5.php 
+    		header("Location: login_form_md5.php");
   		}
 	}
 	else
 	{
-	    // login_form.php的標題
+	    // login_form_md5.php的標題
 		$_SESSION['login_form_title'] = "無效的帳號或密碼";
-		// 無效的帳號或密碼, 重新登入, 前往login_form.php 
-    	header("Location: login_form.php");
+		// 無效的帳號或密碼, 重新登入, 前往login_form_md5.php 
+    	header("Location: login_form_md5.php");
 	}
 }
 ?>
@@ -112,7 +113,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
   <tr>
     <td class="login_form_style10">
       如您尚未加入會員，請
-	  <a href="member_new.php" class="login_form_style11">按此</a>
+	  <a href="member_new_md5.php" class="login_form_style11">按此</a>
       <br />
       忘記密碼了，
 	  <a href="exec_help.php" class="login_form_style11">請幫助我</a>

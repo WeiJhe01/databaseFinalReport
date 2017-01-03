@@ -25,10 +25,10 @@ if ($totalRows > 0)
 	// 收信人
 	$to  = $row['email'];	
 	// 主旨
-	$subject = "WJ書局 - 會員密碼回函";
+	$subject = "維哲購物廣場 - 會員密碼回函";
 	// 信件的內容
-	$body = "歡迎您加入WJ書局會員。<br />";
-	$body .= "在WJ書局, 您隨時可以選購全國最齊全的電腦圖書/軟體/電腦週邊等相關商品。<br /><br />";
+	$body = "歡迎您加入維哲購物廣場會員。<br />";
+	$body .= "在維哲購物廣場, 您隨時可以選購全國最齊全的電腦圖書/軟體/電腦週邊等相關商品。<br /><br />";
 	$body .= "您個人的會員密碼為　" . $row['password'] . " 。";		
 	// 信件的標頭
 	$headers = "Content-type: text/html; charset=utf-8\r\n" . "From: daniel@derek.com";
