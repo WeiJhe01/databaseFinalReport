@@ -19,8 +19,8 @@ if (isset($_SESSION['Username'])) {
   $username = $_SESSION['Username'];
 }
 
-// 選擇 MySQL 資料庫ch26
-mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');
+// 選擇 MySQL 資料庫ch30
+mysql_select_db('ch30', $connection) or die('資料庫ch30不存在');
 // 查詢目前帳號的紀錄
 $query = sprintf("SELECT * FROM member WHERE username = %s", GetSQLValue($username, "text"));
 
@@ -40,8 +40,8 @@ else {
 //**********************************//
 if ((isset($_POST["update"])) && ($_POST["update"] == "member_info")) 
 {
-    // 選擇 MySQL 資料庫ch26
-	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');	
+    // 選擇 MySQL 資料庫ch30
+	mysql_select_db('ch30', $connection) or die('資料庫ch30不存在');	
 	// 新的帳號
 	$_SESSION['Username'] = $_POST['username'];
 	
@@ -54,9 +54,8 @@ if ((isset($_POST["update"])) && ($_POST["update"] == "member_info"))
 
 	// 傳回結果集
     $result = mysql_query($query, $connection);
-
+  // 回到前一個網頁 
 	if ($result) {
-	    // 回到前一個網頁 
 	  	header(sprintf("Location: %s", $_SESSION['PrevPage']));
 	}
 }
@@ -69,7 +68,7 @@ $year = $date['year'];
 $month = $date['mon'];
 $day = $date['mday'];
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -79,18 +78,20 @@ $day = $date['mday'];
 <script src="JavaScript/member_info.js" type="text/javascript"></script>
 </head>
 <body>
+<!-- 載入上邊區塊 -->
+<?php require_once("menu_top.php"); ?>
 <table class="member_info_style1">
   <tr>
     <td class="member_info_style2">
-	  <span class="member_info_style3">
+      <span class="member_info_style3">
         會員基本資料 
       </span>          
     </td>
   </tr>
   <tr>
     <td>
-	  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onkeydown="if(event.keyCode==13) return false;"> 
-	    <table class="member_info_style4">
+      <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onkeydown="if(event.keyCode==13) return false;"> 
+        <table class="member_info_style4">
           <tr>
             <td class="member_info_style5">
               <span class="member_info_style6">注意事項</span>
@@ -106,7 +107,7 @@ $day = $date['mday'];
           </tr>
           <tr>
             <td class="member_info_style16">
-        	  <table class="member_info_style9">
+            <table class="member_info_style9">
                <tr>
                  <td class="member_info_style10">
                    <span class="member_info_style11">帳　　號</span>                 
@@ -150,12 +151,12 @@ $day = $date['mday'];
                  <td class="member_info_style12">
                    <input name="sex" type="radio" value="男" class="member_info_style14"  
                      <?php if (!(strcmp($row['sex'],'男'))) 
-		               {echo "checked=\"checked\"";} ?> />
+                   {echo "checked=\"checked\"";} ?> />
                      男
-		           <input name="sex" type="radio" value="女" 
-		             <?php if (!(strcmp($row['sex'],'女'))) 
-		              {echo "checked=\"checked\"";} ?> />
-  	                 女  
+               <input name="sex" type="radio" value="女" 
+                 <?php if (!(strcmp($row['sex'],'女'))) 
+                  {echo "checked=\"checked\"";} ?> />
+                     女  
                  </td>
                </tr>
                <tr>
@@ -181,16 +182,16 @@ $day = $date['mday'];
                      value="<?php echo $year; ?>" />
                      &nbsp;年&nbsp;
                    <!-- 在選單中填入[出生日期]的[月]欄位值 -->
-	               <select name="month" id="month">
-        		   <?php
-		  			 for ($i = 1; $i <= 12; $i++)
-		  			 {
-				   ?>
-            	     <option value="<?php echo $i ?>"
-              	       <?php if ($i==$month){echo "selected=\"selected\"";} ?>>
+                   <select name="month" id="month">
+                   <?php
+                     for ($i = 1; $i <= 12; $i++)
+                     {
+                   ?>
+                     <option value="<?php echo $i ?>"
+                       <?php if ($i==$month){echo "selected=\"selected\"";} ?>>
                        &nbsp;&nbsp;<?php echo $i ?>&nbsp;
                      </option>         
-				   <?php
+                   <?php
                      }
                    ?>
                    </select>
@@ -236,7 +237,7 @@ $day = $date['mday'];
                      <span class="member_info_style8">＊</span> 
                  </td>
                </tr>
-		       <tr>
+               <tr>
                  <td class="member_info_style10">
                    <span class="member_info_style11">
                      統一編號
@@ -247,7 +248,7 @@ $day = $date['mday'];
                      value="<?php echo $row['uniform']; ?>" />
                  </td>
                </tr>
-		       <tr>
+               <tr>
                  <td class="member_info_style10">
                    <span class="member_info_style11">
                      發票抬頭
@@ -268,22 +269,24 @@ $day = $date['mday'];
                  <td class="member_info_style2">
                    <input type="submit" value="確定送出" onclick="return CheckFields();" />
                    <input type="button" value="取消" class="member_info_style15" 
-                   	 onclick="document.location='<?php echo $_SESSION['PrevPage']; ?>'; return false;" />
+                     onclick="document.location='<?php echo $_SESSION['PrevPage']; ?>'; return false;" />
                  </td>
                </tr>
              </table> 
            </td>
          </tr>
        </table> 
-	   <input name="userlevel" id="userlevel"type="hidden" value="<?php echo $row['userlevel']; ?>" />
-       <input name="birthday" id="birthday" type="hidden" value="<?php echo $row['birthday']; ?>" />
-       <input name="id" id="id" type="hidden" value="<?php echo $row['id']; ?>" />
-	   <input name="old_username" id="old_username" type="hidden" value="<?php echo $row['username']; ?>" />
-       <input name="update" id="update" type="hidden" value="member_info" />
-	  </form>
+       <input name="userlevel" id="userlevel"type="hidden" value="<?php echo $row['userlevel']; ?>" />
+         <input name="birthday" id="birthday" type="hidden" value="<?php echo $row['birthday']; ?>" />
+         <input name="id" id="id" type="hidden" value="<?php echo $row['id']; ?>" />
+       <input name="old_username" id="old_username" type="hidden" value="<?php echo $row['username']; ?>" />
+         <input name="update" id="update" type="hidden" value="member_info" />
+      </form>
    </td>
  </tr>
 </table>
+<!-- 載入下邊區塊 -->
+<?php require_once("menu_bottom.php"); ?>
 </body>
 </body>
 </html>

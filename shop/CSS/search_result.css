@@ -1,0 +1,103 @@
+﻿@charset "utf-8";
+.search_result_style1 {
+	border-collapse: collapse;
+	width: 100%;
+	border: 1px solid #669900;
+	font-size: 12px;
+}
+.search_result_style2 {
+	padding: 2px;  
+}
+.search_result_style3 {
+  border-collapse: collapse;
+	width: 100%;
+}
+.search_result_style4 {
+	width: 60px;
+	background-color: #B0E6FF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style5 {
+	background-color: #B0E6FF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style6 {
+	width: 120px;
+	background-color: #B0E6FF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style7 {
+	width: 100px;
+	background-color: #B0E6FF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style8 {
+	background-color: #B0E6FF;
+	width: 50px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style9 {
+	background-color: #B0E6FF;
+	width: 50px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style10 {
+	width: 80px;
+	background-color: #B0E6FF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #E6F7FF #3CBFFF #3CBFFF #E6F7FF;
+	text-align: center;
+	padding: 4px;
+}
+.search_result_style11 {	
+	border-bottom: 1px solid #669900;
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.search_result_style12 {
+	color: #3399FF;
+	text-decoration: none;
+}
+.search_result_style13 {
+	border: none;
+}
+.search_result_style14 {
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+.search_result_style15 {
+	width: 120px;
+	padding-top: 10px;
+}
+.search_result_style16 {
+	padding-left: 10px;
+	padding-top: 4px;
+	padding-bottom: 4px;	
+}

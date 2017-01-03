@@ -19,8 +19,8 @@ if (isset($_POST['username']) && isset($_POST['password']))
     // 帳號與密碼欄位
 	$username = $_POST['username'];
   	$password = $_POST['password'];	
-	// 選擇 MySQL 資料庫ch26
-	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在');	  
+	// 選擇 MySQL 資料庫ch30
+	mysql_select_db('ch30', $connection) or die('資料庫ch30不存在');	  
 	
   	// 查詢member資料表的username與password欄位
   	$query = sprintf("SELECT username, password, userlevel FROM member WHERE username=%s AND password=%s",
@@ -40,7 +40,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
     		$_SESSION['Username'] = $username;
 		    $_SESSION['UserGroup'] = mysql_result($result, 0, 'userlevel');
 			// 成功登入, 前往 main.php
-    		header("Location: main.php");
+    		header("Location: member_center.php");
 	  	}
   		else 
 		{
@@ -68,6 +68,8 @@ if (isset($_POST['username']) && isset($_POST['password']))
 <script src="JavaScript/login_form.js" type="text/javascript"></script>
 </head>
 <body>
+<!-- 載入上邊區塊 -->
+<?php require_once("menu_top.php"); ?>
 <table class="login_form_style1">
 <?php
   echo "
@@ -119,5 +121,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
     </td>
   </tr>
 </table>
+<!-- 載入下邊區塊 -->
+<?php require_once("menu_bottom.php"); ?>
 </body>
 </html>

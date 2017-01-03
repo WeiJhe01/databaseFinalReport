@@ -16,9 +16,16 @@ if (!isset($_SESSION)) {
 <link href="CSS/exec_help.css" rel="stylesheet" type="text/css" />
 <script src="Spry/SpryData.js" type="text/javascript"></script>
 <script src="JavaScript/exec_help.js" type="text/javascript"></script>
-
+<?php
+// 前往前一頁
+if ($_POST['return'] == "yes") {
+	header("Location: " . $_SESSION['PrevPage']);
+}
+?>
 </head>
 <body>
+<!-- 載入上邊區塊 -->
+<?php require_once("menu_top.php"); ?>
 <table class="exec_help_style1">
   <tr>
 	<td class="exec_help_style2">
@@ -50,6 +57,8 @@ if (!isset($_SESSION)) {
     </td>
   </tr>
 </table>
+<!-- 載入下邊區塊 -->
+<?php require_once("menu_bottom.php"); ?>
 </body>
 </html>
 <?php 

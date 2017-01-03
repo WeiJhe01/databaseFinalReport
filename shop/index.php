@@ -1,195 +1,319 @@
 <?php require_once('Connections/connection.php'); ?>
-<?php require_once('Connections/function.php'); ?>
 <?php
-// 建立 session
 if (!isset($_SESSION)) {
   session_start();
 }
+
 // 前一個網頁
-$_SESSION['PrevPage'] = "index.php";
+$_SESSION['PrevPage'] = $_SERVER['PHP_SELF'];
+// 購物的網頁
+$_SESSION['shopping_page'] = $_SERVER['PHP_SELF'];
 ?>
 <?php
-//*******************************//
-// 登出
-//*******************************//
-// index.php?logout=true
-$logout = $_SERVER['PHP_SELF'] . "?logout=true";
-// index.php網址後面有logout參數
-if ((isset($_GET['logout'])) &&($_GET['logout']=="true"))
-{
-  	// 刪除session變數
-  	$_SESSION['Username'] = NULL;
-    $_SESSION['UserGroup'] = NULL;
-    $_SESSION['PrevUrl'] = NULL;
-  	unset($_SESSION['Username']);
-    unset($_SESSION['UserGroup']);
-    unset($_SESSION['PrevUrl']);
-	// 重新執行index.php
-  	header("Location: index.php");
+// 目前是第 ? 頁
+$page = 0;
+if (isset($_GET['page'])) {
+  $page = $_GET['page'];
 }
 ?>
 <?php
-//*******************************//
-// 登入
-//*******************************//
-// login_form.php的標題
-$_SESSION['login_form_title'] = "請先登入";
+// 尋找關鍵字
+if (!isset($_SESSION['keyword']))
+	$_SESSION['keyword'] = "";
+// 尋找範圍
+if (!isset($_SESSION['keyword_category']))
+	$_SESSION['keyword_category'] = "";
+?>
+<?php
+//-----------------------------------------------
+// 讀取ch30資料庫的computer_books資料表的全部紀錄
+//-----------------------------------------------
 
-// 有帳號與密碼欄位
-if (isset($_POST['username']) && isset($_POST['password'])) 
+// 每頁？筆
+$rowsPerPage = 10;
+// 作用資料表的名稱
+$_SESSION['database'] = 'computer_books';
+
+// 選擇 MySQL 資料庫ch30
+mysql_select_db('ch30', $connection) or die('資料庫ch30不存在'); 
+// 查詢computer_books資料表的author或translator欄位
+$query = "SELECT * FROM " . $_SESSION['database'] . " WHERE author = '德瑞工作室' 
+	OR translator = '德瑞工作室' ORDER BY publishdate DESC";
+// 傳回結果集
+$result = mysql_query($query, $connection) or die(mysql_error());
+
+if ($result)
 {
-    // 帳號與密碼欄位
-	$username = $_POST['username'];
-  	$password = $_POST['password'];
-	// 選擇 MySQL 資料庫ch26
-	mysql_select_db('ch26', $connection) or die('資料庫ch26不存在'); 
-	 
-  	// 查詢member資料表的username與password欄位
-  	$query = sprintf("SELECT username, password, userlevel FROM member WHERE username=%s AND password=%s",
-        GetSQLValue($username, "text"), GetSQLValue($password, "text")); 
-   	// 傳回結果集
-    $result = mysql_query($query, $connection) or die(mysql_error());
-	
-	if ($result)
-	{
-		// 結果集的記錄筆數
-    	$totalRows = mysql_num_rows($result);
-		// 使用者輸入的帳號與密碼存在於member資料表
-    	if ($totalRows) 
-		{    
-			// 建立session變數
-    		$_SESSION['Username'] = $username;
-		    $_SESSION['UserGroup'] = mysql_result($result, 0, 'userlevel');
-			// 成功登入, 前往 main.php
-    		header("Location: main.php");
-	  	}
-  		else 
-		{
-		    // 重新登入, 前往login_form.php 
-    		header("Location: login_form.php");
-  		}
-	}
-	else
-	{		
-		// 無效的帳號或密碼, 重新登入, 前往login_form.php 
-    	header("Location: login_form.php");
-	}
+	// 結果集的記錄筆數
+	$totalRows = mysql_num_rows($result);
+	// 總頁數
+	$totalPages = ceil($totalRows / $rowsPerPage);
+}
+?>
+<?php
+//-----------------------------------------------------
+// 讀取ch30資料庫的computer_books資料表的目前頁的紀錄
+//-----------------------------------------------------
+
+// 目前頁的開始列號
+$startRow = $page * $rowsPerPage;
+// 從目前頁的開始列號開始查詢
+$current_query = sprintf("%s LIMIT %d, %d", $query, $startRow, $rowsPerPage);
+// 傳回目前頁的結果集
+$result = mysql_query($current_query, $connection) or die(mysql_error());
+// 目前頁的記錄筆數
+if ($result) {	
+	$rowsOfCurrentPage = mysql_num_rows($result);
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>::維哲購物廣場::</title>
+<title>::WJ書局::</title>
 <link href="CSS/index.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+<!-- 載入上邊區塊 -->
+<?php require_once("menu_top.php"); ?>
 <table class="index_style1">
   <tr>
     <td class="index_style2">
-	  <span class="index_style3">
-        維哲購物廣場 - 會員中心            
-      </span>          
-    </td>
-  </tr>
-  <tr>
-    <td>
-	  <table class="index_style4">
-        <tr>
-          <td class="index_style5">
-	          <span class="index_style6">【會員中心】</span>
-            <br /><br />
-            <span class="index_style7">在「會員中心」裡，您可以查看，修改，管理與您相關的各項資料。</span>
-            <br />
-            <span class="index_style7">請您安心地進行各項資料的維護。</span>
-            <br /><br />
-            <span class="index_style7">「會員中心」提供如下數種服務：</span>
-            <span class="index_style7">
-            <ol>
-              <li>修改我的個人基本資料，例如地址、e-mail等。</li>
-              <li>修改 / 查詢我的個人密碼。</li>
-	  	      <li>定期收到最新的購物資訊及好康特惠訊息。</li>
-              </ol>
-            </span>
-		  <?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-		  ?>
-            <span class="index_style7">如果您尚未加入會員，歡迎加入我們的會員。</span>
-            <br /><br /><br /><br />
-            <a href="member_new.php" class="index_style8">加入會員 》</a>
-		  <?php
-			}
-		  ?>
-          </td>
-          <td class="index_style9">
-            <!-- 執行 index.php -->
-			<?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-          ?>
-	          <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-              <table class="index_style10">
-                <tr>
-                  <td class="index_style11">
-                    <span class="index_style12">
-                      帳號
-                      <input name="username" id="username" type="text" size="12" maxlength="10" class="index_style13" />
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="index_style11">
-                    <span class="index_style12">
-                      密碼
-                      <input name="password" id="password" type="password" size="12" maxlength="12" class="index_style13" />
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="index_style14">
-                    <input type="submit" value="登入" class="index_style16" />
-                  </td>
-                </tr>
-                </table>
-              </form>
-            <hr class="index_style17" />
-					<?php
-			}
-		  ?>
-					<?php
-            // 已經登入
-            if (isset($_SESSION['Username'])) 
-            {
-          ?>
-		      <a href="main.php" class="index_style18">回到首頁 》</a>
-			    <hr class="index_style17" />
-		      <a href="member_checkinfo.php" class="index_style18">查看基本資料 》</a>
-			    <hr class="index_style17" />
-              <a href="member_info.php" class="index_style18">修改基本資料 》</a>
-            	<hr class="index_style17" />
-            	<a href="<?php echo $logout ?>" class="index_style18">登出 》</a>
-            	<hr class="index_style17" />
-					<?php
-            }
-          ?>
-            <?php
-            // 未登入
-            if (!isset($_SESSION['Username'])) 
-            {
-          ?>
-			<a href="exec_help.php" class="index_style18">忘記密碼 》</a>
-            <hr class="index_style17" /> 
-			<?php
-			}
-		  ?>
-          </td>
-        </tr>
-      </table>    
+      <span class="index_style3">
+        分類 : 電腦圖書 - 網頁設計
+      </span>
     </td>
   </tr>
 </table>
+<br />
+<?php 
+//-----------------------------
+// 有書籍的紀錄
+//-----------------------------
+if ($rowsOfCurrentPage)
+{
+?> 
+  <!--********************************************-->
+  <!-- 顯示 資料筆數 ? 共分 ? 頁 第 1 頁/下頁/末頁 -->
+  <!--********************************************-->
+  <table class="index_style4">
+    <tr>
+      <td class="index_style5">
+        資料筆數 ： <?php echo $totalRows ?> 
+      </td>
+      <td class="index_style5">
+        共分 <?php echo $totalPages; ?> 頁
+      </td>
+      <td class="index_style5">
+        每頁 <?php echo $rowsPerPage; ?> 筆
+      </td>
+      <td class="index_style6">
+			  <?php 
+				  if ($page > 0) {
+			  ?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], 0); ?>" class="index_style7">首頁 /</a>
+				<?php 
+					}
+				?>
+        <?php 
+				  if ($page > 0) {
+			  ?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], max(0, $page - 1)); ?>" 
+              class="index_style7">上頁 /</a>        
+        <?php 
+					}
+				?>
+				第 <?php echo $page + 1; ?> 頁
+    		<?php 
+				  if ($page < $totalPages - 1) {				
+				?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], min($totalPages - 1, $page + 1)); ?>" 
+              class="index_style7"> / 下頁</a>
+        <?php 
+					}
+				?>
+				<?php 
+				  if ($page < $totalPages - 1) {				
+				?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], $totalPages - 1); ?>" class="index_style7"> / 末頁</a>
+        <?php 
+					}
+				?>
+      </td>
+    </tr>
+  </table>
+  <!--****************-->
+  <!-- 顯示目前頁的資料 -->
+  <!--****************-->
+  <table class="index_style8">
+	<?php 
+	  // 左邊的欄位
+    $odd = true;
+		// 第 ? 個紀錄
+		$index = 0;
+		
+		// 讀取目前的紀錄
+    while ($row = mysql_fetch_assoc($result)) 
+    { 
+      // 左邊的欄位
+      if ($odd) 
+      { 
+    ?>
+      <tr>
+    <?php 
+      }
+			
+      // 單數列, 顯示不同的背景顏色
+      if ($index % 4 < 2) 
+      { 
+    ?>
+		    <td class="index_style9">
+    <?php 
+      } else {
+		?>
+			  <td class="index_style16">
+    <?php 
+      }
+		?>
+          <table>
+            <tr>
+              <td class="index_style10">
+                <img src="<?php echo 'photo/item/' . $row['photo']; ?>" width="100" />
+              </td>
+              <td class="index_style10">
+                <table>
+                  <tr>
+                    <td class="index_style11">
+                      <a href="item_detail.php?pro_id=<?php echo $row['id']; ?>" class="index_style12">
+                        <?php echo $row['title']; ?>  
+                      </a>     
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="index_style13">
+                      <?php echo substr($row['feature'], 0, 140); ?> 
+                      &nbsp;
+                      <a href="item_detail.php?pro_id=<?php echo $row['id']; ?>" class="index_style12">
+                        ...更多
+                      </a>
+                      <br />
+                      作者 : 
+                      <span class="index_style14">
+                        <?php echo $row['author']; ?>
+                      </span>
+                      <br />
+                      發行日 : 
+                      <span class="index_style14">
+                        <?php echo date("Y年n月", strtotime($row['publishdate'])); ?>
+                      </span>
+                      <br />
+                      原價 : 
+											<span class="index_style14">
+											  <?php echo $row['price']; ?> 元
+                      </span>
+                      <br />
+                      <span class="index_style15">
+                        特價：<?php echo $row['discount']; ?> 折 
+                         <?php echo $row['saleprice']; ?> 元
+                      </span>
+                      <br />
+                      <img src="photo/item_list_shop.jpg" />
+                      <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="index_style12">				  
+                        放入購物車
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+    <?php 
+		  // 更換左/右邊欄位
+		  $odd = !$odd;
+			// 下一個紀錄
+			$index++;
+			
+			// 左邊欄位或目前頁的最後紀錄
+      if ($odd || ($index > $rowsPerPage - 1)) 
+      {
+    ?>
+      </tr>
+    <?php
+			}
+    }
+    ?>
+  </table>
+  <!--********************************************-->
+  <!-- 顯示 資料筆數 ? 共分 ? 頁 第 1 頁/下頁/末頁 -->
+  <!--********************************************-->
+  <table class="index_style4">
+    <tr>
+      <td class="index_style5">
+        資料筆數 ： <?php echo $totalRows ?> 
+      </td>
+      <td class="index_style5">
+        共分 <?php echo $totalPages; ?> 頁
+      </td>
+      <td class="index_style5">
+        每頁 <?php echo $rowsPerPage; ?> 筆
+      </td>
+      <td class="index_style6">
+			  <?php 
+				  if ($page > 0) {
+			  ?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], 0); ?>" class="index_style7">首頁 /</a>
+				<?php 
+					}
+				?>
+        <?php 
+				  if ($page > 0) {
+			  ?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], max(0, $page - 1)); ?>" 
+              class="index_style7">上頁 /</a>        
+        <?php 
+					}
+				?>
+				第 <?php echo $page + 1; ?> 頁
+    		<?php 
+				  if ($page < $totalPages - 1) {				
+				?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], min($totalPages - 1, $page + 1)); ?>" 
+              class="index_style7"> / 下頁</a>
+        <?php 
+					}
+				?>
+				<?php 
+				  if ($page < $totalPages - 1) {				
+				?>
+            <a href="<?php printf("%s?page=%d", $_SERVER["PHP_SELF"], $totalPages - 1); ?>" class="index_style7"> / 末頁</a>
+        <?php 
+					}
+				?>
+      </td>
+    </tr>
+  </table>
+  <br />
+<?php 
+}
+else
+{
+?>
+  <table>
+    <tr>
+      <td>
+        沒有資料 
+      </td>
+    </tr>
+  </table>
+<?php 
+}
+?>
+<!-- 載入下邊區塊 -->
+<?php require_once("menu_bottom.php"); ?>
 </body>
 </html>
+<?php
+// 釋放結果集
+mysql_free_result($result);
+?>
