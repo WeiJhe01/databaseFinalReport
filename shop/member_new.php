@@ -16,7 +16,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 	// 選擇 MySQL 資料庫miaoli_food
 	mysql_select_db('miaoli_food', $connection) or die('資料庫miaoli_food不存在');	
 	// 在member資料表內插入一筆新的紀錄
-	$query = sprintf("INSERT INTO member (username, password, name, gender, mail, date, phone, address) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", 
+	$query = sprintf("INSERT INTO member (username, password, name, gender, mail, date, phone, address,PIN) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
 		GetSQLValue($_POST['username'], "text"), 
 		GetSQLValue($_POST['password'], "text"), 
 		GetSQLValue($_POST['name'], "text"), 
@@ -24,7 +24,8 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 		GetSQLValue($_POST['mail'], "text"), 
 		GetSQLValue($_POST['date'], "date"), 
 		GetSQLValue($_POST['phone'], "text"), 
-		GetSQLValue($_POST['address'], "text"));
+		GetSQLValue($_POST['address'], "text")
+		GetSQLValue($_POST['test'], "text"),);
 	
 	// 傳回結果集
 	$result = mysql_query($query, $connection);
@@ -53,8 +54,17 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 	if(response.status == "unknown")
 	   console.log("not login");
 	else
-           console.log(response.authResponse.userID);
-        
+	{
+		$.ajax({
+	type: "POST",
+	url: "member_new.php",
+	data: { test: response.authResponse.userID}
+	})
+  .done(function( msg ) {
+    console.log( "Data Saved: " + msg );
+  });
+       console.log(response.authResponse.userID);
+	}   
 	// The response object is returned with a status field that lets the
         // app know the current login status of the person.
         // Full docs on the response object can be found in the documentation
@@ -190,7 +200,6 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
               <span class="member_new_style7">
                 2.&nbsp;&nbsp;我們會將認證信函寄到您的電子信箱
 				<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-				<div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
 				</br><div id="status"></div>
 
               </span>
