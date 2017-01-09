@@ -3,7 +3,7 @@
 if (!isset($_SESSION)) {
   session_start();
 }
-
+//**用法說明:http://www.wibibi.com/info.php?tid=85
 // 前一個網頁
 $_SESSION['PrevPage'] = $_SERVER['PHP_SELF'];
 // 購物的網頁
@@ -26,19 +26,18 @@ if (!isset($_SESSION['keyword_category']))
 ?>
 <?php
 //-----------------------------------------------
-// 讀取ch30資料庫的computer_books資料表的全部紀錄
+// 讀取miaoli_food資料庫的shop資料表的全部紀錄
 //-----------------------------------------------
 
 // 每頁？筆
 $rowsPerPage = 10;
 // 作用資料表的名稱
-$_SESSION['database'] = 'computer_books';
+$_SESSION['database'] = 'shop';
 
-// 選擇 MySQL 資料庫ch30
-mysql_select_db('ch30', $connection) or die('資料庫ch30不存在'); 
-// 查詢computer_books資料表的author或translator欄位
-$query = "SELECT * FROM " . $_SESSION['database'] . " WHERE author = '德瑞工作室' 
-	OR translator = '德瑞工作室' ORDER BY publishdate DESC";
+// 選擇 MySQL 資料庫miaoli_food
+mysql_select_db('miaoli_food', $connection) or die('資料庫miaoli_food不存在'); 
+// 查詢shop資料表
+$query = "SELECT * FROM " . $_SESSION['database'] ;
 // 傳回結果集
 $result = mysql_query($query, $connection) or die(mysql_error());
 
@@ -52,7 +51,7 @@ if ($result)
 ?>
 <?php
 //-----------------------------------------------------
-// 讀取ch30資料庫的computer_books資料表的目前頁的紀錄
+// 讀取miaoli_food資料庫的shop資料表的目前頁的紀錄
 //-----------------------------------------------------
 
 // 目前頁的開始列號
@@ -70,7 +69,7 @@ if ($result) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>::WJ書局::</title>
+<title>::苗栗美食達人::</title>
 <link href="CSS/index.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -80,7 +79,7 @@ if ($result) {
   <tr>
     <td class="index_style2">
       <span class="index_style3">
-        分類 : 電腦圖書 - 網頁設計
+        苗栗美食達人
       </span>
     </td>
   </tr>
@@ -178,49 +177,54 @@ if ($rowsOfCurrentPage)
           <table>
             <tr>
               <td class="index_style10">
-                <img src="<?php echo 'photo/item/' . $row['photo']; ?>" width="100" />
+                <img src="<?php echo 'photo/item/' . $row['shopImg']; ?>" width="100" />
               </td>
               <td class="index_style10">
                 <table>
                   <tr>
                     <td class="index_style11">
-                      <a href="item_detail.php?pro_id=<?php echo $row['id']; ?>" class="index_style12">
-                        <?php echo $row['title']; ?>  
+                      <a href="item_detail.php?pro_id=<?php echo $row['shop_id']; ?>" class="index_style12">
+                        <?php echo $row['name']; ?>  
                       </a>     
                     </td>
                   </tr>
                   <tr>
                     <td class="index_style13">
-                      <?php echo substr($row['feature'], 0, 140); ?> 
+                      <?php echo substr($row['about'], 0, 140); ?> 
                       &nbsp;
                       <a href="item_detail.php?pro_id=<?php echo $row['id']; ?>" class="index_style12">
                         ...更多
                       </a>
                       <br />
-                      作者 : 
+                      營業時間 : 
                       <span class="index_style14">
-                        <?php echo $row['author']; ?>
+                        <?php echo $row['businessHours']; ?>
                       </span>
                       <br />
-                      發行日 : 
+<!--                 日期用法
+					 發行日 : 
                       <span class="index_style14">
-                        <?php echo date("Y年n月", strtotime($row['publishdate'])); ?>
+                        <?php //echo date("Y年n月", strtotime($row['publishdate'])); ?>
                       </span>
                       <br />
-                      原價 : 
-											<span class="index_style14">
-											  <?php echo $row['price']; ?> 元
+-->
+                      電話 : 
+					  <span class="index_style14">
+						<?php echo $row['phone']; ?> 
                       </span>
                       <br />
-                      <span class="index_style15">
-                        特價：<?php echo $row['discount']; ?> 折 
-                         <?php echo $row['saleprice']; ?> 元
+					  地址 : 
+					  <span class="index_style14">
+						<?php echo $row['address_district']; ?> 
+						<?php echo $row['address_detail']; ?> 
                       </span>
                       <br />
+<!--                 日期用法
                       <img src="photo/item_list_shop.jpg" />
-                      <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="index_style12">				  
+                      <a href="add_to_cart.php?id=<?php //echo $row['id']; ?>" class="index_style12">				  
                         放入購物車
                       </a>
+-->
                     </td>
                   </tr>
                 </table>

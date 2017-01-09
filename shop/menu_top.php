@@ -41,8 +41,8 @@ if (isset($_POST['username']) && isset($_POST['password']))
     // 帳號與密碼欄位
 	$username = $_POST['username'];
   	$password = $_POST['password'];
-	// 選擇 MySQL 資料庫ch30
-	mysql_select_db('ch30', $connection) or die('資料庫ch30不存在'); 
+	// 選擇 MySQL 資料庫miaoli_food
+	mysql_select_db('miaoli_food', $connection) or die('資料庫miaoli_food不存在'); 
 	 
   	// 查詢member資料表的username與password欄位
   	$query = sprintf("SELECT username, password, userlevel FROM member WHERE username=%s AND password=%s",
@@ -63,7 +63,7 @@ if (isset($_POST['username']) && isset($_POST['password']))
 <table class="menu_top_style1">
   <tr>
     <td class="menu_top_style2">
-      <img src="photo/topimg.jpg" alt="苗栗農產品購物網" width="250px" height="125px"/>
+      <img src="photo/logo.jpg" alt="苗栗美食達人" width="250px" height="125px"/>
 	  </td>
     <td class="menu_top_style3">
 	    <table class="menu_top_style1">
@@ -73,9 +73,11 @@ if (isset($_POST['username']) && isset($_POST['password']))
               <tr>
                 <td>&nbsp;                  
                 </td>
-                <td class="menu_top_style5">
+                <!--新手操作說明
+				<td class="menu_top_style5">
                   <a href="freshman.php"><img src="photo/menu_top/freshman.jpg" alt="新手上路" class="menu_top_style6" /></a> 
                 </td>
+				-->
                 <td class="menu_top_style5">
                   <a href="member_new.php"><img src="photo/menu_top/member_new.jpg" alt="加入會員" class="menu_top_style6" /></a>
                 </td>
@@ -149,11 +151,13 @@ if (isset($_POST['username']) && isset($_POST['password']))
     </td>
   </tr>
 </table>
-<table class="menu_top_style15">
+<!--<table class="menu_top_style15">
   <tr>
     <td class="menu_top_style16">
-      <!-- 載入左邊區塊 -->
-      <?php require_once("menu_left.php"); ?>
+       載入左邊區塊 
+      <?php //require_once("menu_left.php"); ?>
     </td>
+	
     <td class="menu_top_style17">
+	-->
 	</body>

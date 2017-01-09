@@ -9,7 +9,7 @@ $_SESSION['PrevPage'] = "freshman.php";
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>::WJ書局::</title>
+<title>::苗栗美食達人::</title>
 <link href="CSS/freshman.css" rel="stylesheet" type="text/css" />
 </head>
 <body>

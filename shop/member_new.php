@@ -13,22 +13,18 @@ if (!isset($_SESSION)) {
 //**********************************//
 if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new")) 
 {
-	// 選擇 MySQL 資料庫ch30
-	mysql_select_db('ch30', $connection) or die('資料庫ch30不存在');	
-	  
+	// 選擇 MySQL 資料庫miaoli_food
+	mysql_select_db('miaoli_food', $connection) or die('資料庫miaoli_food不存在');	
 	// 在member資料表內插入一筆新的紀錄
-	$query = sprintf("INSERT INTO member (username, password, name, sex, birthday, email, phone, address, uniform, unititle, userlevel) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+	$query = sprintf("INSERT INTO member (username, password, name, gender, mail, date, phone, address) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", 
 		GetSQLValue($_POST['username'], "text"), 
 		GetSQLValue($_POST['password'], "text"), 
 		GetSQLValue($_POST['name'], "text"), 
-		GetSQLValue($_POST['sex'], "text"), 
-		GetSQLValue($_POST['birthday'], "date"), 
-		GetSQLValue($_POST['email'], "text"), 
+		GetSQLValue($_POST['gender'], "text"), 
+		GetSQLValue($_POST['mail'], "text"), 
+		GetSQLValue($_POST['date'], "date"), 
 		GetSQLValue($_POST['phone'], "text"), 
-		GetSQLValue($_POST['address'], "text"), 
-		GetSQLValue($_POST['uniform'], "text"), 
-		GetSQLValue($_POST['unititle'], "text"),
-		GetSQLValue($_POST['userlevel'], "int"));
+		GetSQLValue($_POST['address'], "text"));
 	
 	// 傳回結果集
 	$result = mysql_query($query, $connection);
@@ -68,10 +64,10 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
               <span class="member_new_style6">注意事項</span>
               <br /><br />
               <span class="member_new_style7">
-                1.&nbsp;&nbsp;為方便您購物時能確實收到商品，請務必正確填寫以下資料。（
+                1.&nbsp;&nbsp;請務必正確填寫以下資料。（
               </span>
               <span class="member_new_style8">＊</span>
-              <span>欄位為必填）</span>
+              <span>欄位為必填 &nbsp;）</span>
               <br />
               <span class="member_new_style7">
                 2.&nbsp;&nbsp;我們會將認證信函寄到您的電子信箱
@@ -87,7 +83,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="username" id="username" type="text" class="member_new_style13" size="20" maxlength="10" 
-                     value="<?php echo $_COOKIE['username']; ?>" />
+                     value="" />
                      <span class="member_new_style8">＊</span>（3~10個字元，請勿使用中文）                 
                  </td>
                </tr>
@@ -99,7 +95,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                 <td class="member_new_style12">
                    <input name="password" id="password" type="password" class="member_new_style13" size="20" maxlength="12" 
-                     value="<?php echo $_COOKIE['password']; ?>" />
+                     value="" />
                      <span class="member_new_style8">＊</span>（6~12個字元，請勿使用中文）
                  </td>
                </tr>
@@ -111,7 +107,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <input name="name" id="name" type="text" class="member_new_style13" size="20" maxlength="40" 
-                     value="<?php echo uniDecode($_COOKIE['name']); ?>" />
+                     value="" />
                      <span class="member_new_style8">＊</span>
                  </td>
                </tr>
@@ -123,7 +119,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                  </td>
                  <td class="member_new_style12">
                    <!-- 點選[性別]欄位值為 男 -->
-                   <input name="sex" type="radio" value="男" class="member_new_style14" 
+                   <input name="gender" type="radio" value="男" class="member_new_style14" 
                    <?php 
 				     // 檢查之前點選的[性別]欄位值是否是 "男" 
 					 if (!empty($_COOKIE['sex']))
@@ -139,7 +135,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 					 } 
 				   ?> />
                    男
-                   <input name="sex" type="radio" value="女" 
+                   <input name="gender" type="radio" value="女" 
                    <?php 
 					 if (!empty($_COOKIE['sex']))
 					 {
@@ -159,8 +155,8 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                    </span> 
                  </td>
                  <td class="member_new_style12">
-                   <input name="email" id="email" type="text" class="member_new_style13" size="40" maxlength="40" 
-                     value="<?php echo $_COOKIE['email']; ?>" />
+                   <input name="mail" id="mail" type="text" class="member_new_style13" size="40" maxlength="40" 
+                     value="" />
                      <span class="member_new_style8">＊</span>
                  </td>
                </tr>
@@ -171,8 +167,8 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                    </span> 
                  </td>
                  <td class="member_new_style12">
-                   <input name="year" id="year" type="text" class="member_new_style13" size="6" maxlength="4" 
-                     value="<?php echo $_COOKIE['year']; ?>" />
+                   <input name="date" id="date" type="text" class="member_new_style13" size="6" maxlength="4" 
+                     value="" />
                      &nbsp;年&nbsp;
                    <!-- 在選單中填入[出生日期]的[月]欄位值 -->
 	               <select name="month" id="month">
@@ -226,47 +222,25 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
                <tr>
                  <td class="member_new_style10">
                    <span class="member_new_style11">
-                     連絡電話 
+                     電話/手機 
                    </span> 
                  </td>
                  <td class="member_new_style12">
                    <input name="phone" id="phone" type="text" class="member_new_style13" size="20" maxlength="15" 
-                     value="<?php echo uniDecode($_COOKIE['phone']); ?>" />
+                     value="" />
                      <span class="member_new_style8">＊</span>  
                  </td>
                </tr>
                <tr>
                  <td class="member_new_style10">
                    <span class="member_new_style11">
-                     收件地址  
+                     地　　址  
                    </span> 
                  </td>
                  <td class="member_new_style12">
                    <input name="address" id="address" type="text" class="member_new_style13" size="60" maxlength="120"
-                     value="<?php echo uniDecode($_COOKIE['address']); ?>" />
+                     value="" />
                      <span class="member_new_style8">＊</span> 
-                 </td>
-               </tr>
-		       <tr>
-                 <td class="member_new_style10">
-                   <span class="member_new_style11">
-                     統一編號
-                   </span> 
-                 </td>
-                 <td class="member_new_style12">
-                   <input name="uniform" id="uniform" type="text" class="member_new_style13" size="40" maxlength="20"
-                     value="<?php echo uniDecode($_COOKIE['uniform']); ?>" />
-                 </td>
-               </tr>
-		       <tr>
-                 <td class="member_new_style10">
-                   <span class="member_new_style11">
-                     發票抬頭
-                   </span>
-                 </td>
-                 <td class="member_new_style12">
-                   <input name="unititle" id="unititle" type="text" class="member_new_style13" size="40" maxlength="40"
-                     value="<?php echo uniDecode($_COOKIE['unititle']); ?>" />
                  </td>
                </tr>
              </table>
