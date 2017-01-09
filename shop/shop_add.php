@@ -16,15 +16,14 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 	// 選擇 MySQL 資料庫miaoli_food
 	mysql_select_db('miaoli_food', $connection) or die('資料庫miaoli_food不存在');	
 	// 在member資料表內插入一筆新的紀錄
-	$query = sprintf("INSERT INTO shop (name, about, shopImg, businessHours, fansPage, phone, date, good,address_district,address_detail) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+	$query = sprintf("INSERT INTO shop (name, about, shopImg, businessHours, fansPage, phone, date,address_district,address_detail) VALUES (%s, %s, %s, %s,%s, %s, %s, %s, %s)", 
 		GetSQLValue($_POST['name'], "text"), 
 		GetSQLValue($_POST['about'], "text"), 
 		GetSQLValue($_POST['shopImg'], "text"), 
 		GetSQLValue($_POST['businessHours'], "text"), 
 		GetSQLValue($_POST['fansPage'], "text"), 
 		GetSQLValue($_POST['phone'], "date"), 
-		GetSQLValue($_POST['date'], "text"), 
-		GetSQLValue($_POST['good'], "text"),
+		GetSQLValue($_POST['date'], "text"),
 		GetSQLValue($_POST['address_district'], "text"),
 		GetSQLValue($_POST['address_detail'], "text"));
 	
