@@ -203,7 +203,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
               </span>
             </td>
           </tr>
-		  <tr><fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+		  <tr><fb:login-button scope="public_profile,email" onlogin="checkLoginState();">使用Facebook帳號登入</fb:login-button>
 		  </tr>
           <tr>
             <td class="member_new_style16">
