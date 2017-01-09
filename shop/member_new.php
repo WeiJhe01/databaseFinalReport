@@ -200,12 +200,11 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
               <br />
               <span class="member_new_style7">
                 2.&nbsp;&nbsp;我們會將認證信函寄到您的電子信箱
-				<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
-				</br><div id="status"></div>
-
               </span>
             </td>
           </tr>
+		  <tr><fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+		  </tr>
           <tr>
             <td class="member_new_style16">
         	  <table class="member_new_style9">
