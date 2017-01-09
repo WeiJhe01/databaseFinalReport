@@ -56,14 +56,14 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 	   console.log("not login");
 	else
 	{
+		/*
 		$.ajax({
 	type: "POST",
 	url: "member_new.php",
 	data: { test: response.authResponse.userID}
 	})
-  .done(function( msg ) {
-    console.log( "Data Saved: " + msg );
-  });
+  .done(function( msg ) {});
+  */
        console.log(response.authResponse.userID);
 	}   
 	// The response object is returned with a status field that lets the
