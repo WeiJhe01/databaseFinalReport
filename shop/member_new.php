@@ -44,6 +44,7 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 <link href="CSS/member_new.css" rel="stylesheet" type="text/css" />
 <script src="Spry/SpryData.js" type="text/javascript"></script>
 <script src="JavaScript/member_new.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
