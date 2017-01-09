@@ -24,8 +24,8 @@ if ((isset($_POST["insert"])) && ($_POST["insert"] == "member_new"))
 		GetSQLValue($_POST['mail'], "text"), 
 		GetSQLValue($_POST['date'], "date"), 
 		GetSQLValue($_POST['phone'], "text"), 
-		GetSQLValue($_POST['address'], "text")
-		GetSQLValue($_POST['test'], "text"),);
+		GetSQLValue($_POST['address'], "text"),
+		GetSQLValue($_POST['test'], "text"));
 	
 	// 傳回結果集
 	$result = mysql_query($query, $connection);
